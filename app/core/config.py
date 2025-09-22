@@ -60,6 +60,7 @@ class Settings(BaseSettings):
         env_nested_delimiter="__",
         env_prefix="APP_CONFIG__",
         env_file=".env",
+        extra="ignore",
     )
 
     run: RunConfig = RunConfig()

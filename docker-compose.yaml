@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  fastapi:
+    build: .
+    container_name: api_service
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/image
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - service_network
+
+  db:
+    image: postgres:16
+    container_name: qna_db
+    env_file:
+      - ./app/.env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "6270:5432"
+    networks:
+      - service_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+
+networks:
+  service_network:
+    driver: bridge

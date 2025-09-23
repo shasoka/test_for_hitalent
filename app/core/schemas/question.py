@@ -1,15 +1,20 @@
 from pydantic import BaseModel
 
+from .answers import AnswerRead
 from .mixins import CreatedAtMixin, IntIdPkMixin, TextMixin
 
 
-class QuestionBase(TextMixin, CreatedAtMixin, BaseModel):
+class QuestionBase(TextMixin, BaseModel):
     pass
 
 
-class QuestionRead(IntIdPkMixin, QuestionBase):
+class QuestionRead(IntIdPkMixin, CreatedAtMixin, QuestionBase):
     pass
 
 
-class QuestionCreate(TextMixin, BaseModel):
+class QuestionWithAnswersRead(QuestionRead):
+    answers: list[AnswerRead]
+
+
+class QuestionCreate(QuestionBase):
     pass

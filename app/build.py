@@ -9,7 +9,8 @@ from core.config import settings
 
 from api import router as api_router
 
-# from core.exceptions import register_exceptions_handlers
+from core.exceptions import register_exceptions_handlers
+
 # from core.middlewares import register_middlewares
 from core.models import db_helper
 
@@ -41,7 +42,7 @@ def build_app() -> FastAPI:
 
     app.include_router(api_router)
 
-    # register_exceptions_handlers(app)
+    register_exceptions_handlers(app)
 
     # register_middlewares(app)
 

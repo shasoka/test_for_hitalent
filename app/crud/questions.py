@@ -7,17 +7,18 @@ from sqlalchemy.orm import selectinload
 from core.exceptions import NoEntityFoundException
 from core.models import Question
 
-from core.schemas.question import QuestionCreate
+from core.schemas import QuestionCreate
 
 __all__ = (
     "create_question_in_db",
+    "check_if_question_exists",
     "delete_question_in_db",
     "get_questions_from_db",
     "get_question_with_answers_from_db",
 )
 
 
-async def _check_if_question_exists(
+async def check_if_question_exists(
     session: AsyncSession,
     question_id: int,
 ) -> None:
@@ -46,7 +47,7 @@ async def get_question_with_answers_from_db(
     question_id: int,
     session: AsyncSession,
 ) -> Question:
-    await _check_if_question_exists(session, question_id)
+    await check_if_question_exists(session, question_id)
 
     query_result: QueryResult = await session.execute(
         select(Question)
@@ -71,7 +72,7 @@ async def delete_question_in_db(
     session: AsyncSession,
     question_id: int,
 ) -> Question:
-    await _check_if_question_exists(session, question_id)
+    await check_if_question_exists(session, question_id)
 
     question_to_delete: Question | None = await get_question_by_id(
         session,

@@ -1,7 +1,6 @@
 from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import ORJSONResponse
-from pydantic import ValidationError
 
 from core.exceptions import NoEntityFoundException
 
@@ -32,6 +31,6 @@ def register_exceptions_handlers(app: FastAPI) -> None:
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             content={
                 "message": "Недопустимая сущность",
-                "error": str(exc),
+                "error": "; ".join([err["msg"] for err in exc.errors()]),
             },
         )

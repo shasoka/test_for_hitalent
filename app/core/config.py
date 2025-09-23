@@ -31,6 +31,11 @@ class ApiQuestions(BaseModel):
     tags: list[str] = ["Questions"]
 
 
+class ApiAnswers(BaseModel):
+    prefix: str = "/answers"
+    tags: list[str] = ["Answers"]
+
+
 class ApiBaseConfig(BaseModel):
     slash: str = "/"
     docs: str = "/docs"
@@ -41,6 +46,7 @@ class ApiBaseConfig(BaseModel):
     # --- Sub-routers ---
 
     questions: ApiQuestions = ApiQuestions()
+    answers: ApiAnswers = ApiAnswers()
 
 
 class Database(BaseModel):

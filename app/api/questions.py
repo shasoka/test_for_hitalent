@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.models import db_helper, Question
 from core.schemas import QuestionRead
-from core.schemas.question import QuestionCreate, QuestionWithAnswersRead
+from core.schemas import QuestionCreate, QuestionWithAnswersRead
 
 from services.questions import (
     create_question_svc,
@@ -30,7 +30,7 @@ async def get_questions(
 async def get_question_with_answers(
     id: int,
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
-):
+) -> Question:
     return await get_question_with_answers_svc(id, session)
 
 

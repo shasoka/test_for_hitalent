@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from .answers import AnswerRead
+from .answer import AnswerRead
 from .mixins import CreatedAtMixin, IntIdPkMixin, TextMixin
 
 

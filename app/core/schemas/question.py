@@ -9,3 +9,7 @@ class QuestionBase(TextMixin, CreatedAtMixin, BaseModel):
 
 class QuestionRead(IntIdPkMixin, QuestionBase):
     pass
+
+
+class QuestionCreate(TextMixin, BaseModel):
+    pass

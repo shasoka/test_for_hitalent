@@ -1,5 +1,2 @@
-from pydantic import BaseModel
-
-
-class IntIdPkMixin(BaseModel):
+class IntIdPkMixin:
     id: int

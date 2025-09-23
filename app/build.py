@@ -10,22 +10,21 @@ from core.config import settings
 # from api import router as api_router
 # from core.exceptions import register_exceptions_handlers
 # from core.middlewares import register_middlewares
-# from core.models import db_helper
+from core.models import db_helper
 
 
-# @asynccontextmanager
-# async def lifespan(_app: FastAPI) -> AsyncGenerator[Any, Any]:
-	# На __aenter__ ничего не происходит
-	# После __aenter__ yield
-	# yield
-	# На __aexit__ dispose
-	# await db_helper.dispose()
+@asynccontextmanager
+async def lifespan(_app: FastAPI) -> AsyncGenerator[Any, Any]:
+    # На __aenter__ пустой yield
+    yield
+    # На __aexit__ dispose
+    await db_helper.dispose()
 
 
 def build_app() -> FastAPI:
     app = FastAPI(
         default_response_class=ORJSONResponse,
-        # lifespan=lifespan,
+        lifespan=lifespan,
         title=settings.app.title,
         summary=settings.app.summary,
         description=settings.app.description,

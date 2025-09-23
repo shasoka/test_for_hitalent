@@ -60,6 +60,7 @@ class Settings(BaseSettings):
         env_nested_delimiter="__",
         env_prefix="APP_CONFIG__",
         env_file=".env",
+        # игнорирует переменные, которые начинаются не с префикса
         extra="ignore",
     )
 

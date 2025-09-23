@@ -26,6 +26,11 @@ class AppObjectConfig(BaseModel):
     }
 
 
+class ApiQuestions(BaseModel):
+    prefix: str = "/questions"
+    tags: list[str] = ["Questions"]
+
+
 class ApiBaseConfig(BaseModel):
     slash: str = "/"
     docs: str = "/docs"
@@ -35,7 +40,7 @@ class ApiBaseConfig(BaseModel):
 
     # --- Sub-routers ---
 
-    ...
+    questions: ApiQuestions = ApiQuestions()
 
 
 class Database(BaseModel):

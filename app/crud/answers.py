@@ -6,7 +6,7 @@ from core.models import Answer
 from core.schemas import AnswerCreate
 from crud.questions import get_question_by_id_or_404
 
-__all__ = ("create_answer_in_db",)
+__all__ = ("create_answer_in_db", "get_answer_by_id_or_404")
 
 
 async def get_answer_by_id_or_404(

@@ -8,7 +8,10 @@ from core.schemas.validators import check_if_value_is_correct_uuid
 
 
 class AnswerBase(TextMixin, BaseModel):
-    user_id: Annotated[uuid.UUID, PlainValidator(check_if_value_is_correct_uuid)]
+    user_id: Annotated[
+        str | uuid.UUID,
+        PlainValidator(check_if_value_is_correct_uuid),
+    ]
 
 
 class AnswerRead(IntIdPkMixin, CreatedAtMixin, AnswerBase):

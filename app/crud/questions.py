@@ -1,4 +1,4 @@
-from typing import Coroutine, Sequence
+from typing import Sequence
 
 from sqlalchemy import Result as QueryResult, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -11,6 +11,7 @@ from core.schemas.question import QuestionCreate
 
 __all__ = (
     "create_question_in_db",
+    "delete_question_in_db",
     "get_questions_from_db",
     "get_question_with_answers_from_db",
 )
@@ -20,11 +21,7 @@ async def _check_if_question_exists(
     session: AsyncSession,
     question_id: int,
 ) -> None:
-    query_result: QueryResult = await session.execute(
-        select(Question).where(Question.id == question_id)
-    )
-    question: Question | None = query_result.scalar_one_or_none()
-    if question is None:
+    if (await get_question_by_id(session, question_id)) is None:
         raise NoEntityFoundException(f"Вопрос с id={question_id} не найден в БД")
 
 
@@ -34,15 +31,26 @@ async def get_questions_from_db(session: AsyncSession) -> list[Question]:
     return list(questions)
 
 
+async def get_question_by_id(
+    session: AsyncSession,
+    question_id: int,
+) -> Question | None:
+    query_result: QueryResult = await session.execute(
+        select(Question).where(Question.id == question_id)
+    )
+    question: Question | None = query_result.scalar_one_or_none()
+    return question
+
+
 async def get_question_with_answers_from_db(
-    id: int,
+    question_id: int,
     session: AsyncSession,
 ) -> Question:
-    await _check_if_question_exists(session, id)
+    await _check_if_question_exists(session, question_id)
 
     query_result: QueryResult = await session.execute(
         select(Question)
-        .where(Question.id == id)
+        .where(Question.id == question_id)
         .options(selectinload(Question.answers))
     )
     question: Question = query_result.scalar()
@@ -57,3 +65,18 @@ async def create_question_in_db(
     session.add(question)
     await session.commit()
     return question
+
+
+async def delete_question_in_db(
+    session: AsyncSession,
+    question_id: int,
+) -> Question:
+    await _check_if_question_exists(session, question_id)
+
+    question_to_delete: Question | None = await get_question_by_id(
+        session,
+        question_id,
+    )
+    await session.delete(question_to_delete)
+    await session.commit()
+    return question_to_delete

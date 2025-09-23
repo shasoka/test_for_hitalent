@@ -12,6 +12,7 @@ class Question(IntIdPkMixin, TextMixin, CreatedAtMixin, Base):
     answers: Mapped[list["Answer"]] = relationship(
         "Answer",
         back_populates="question",
+        cascade="all, delete-orphan",
     )
 
 

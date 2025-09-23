@@ -9,6 +9,7 @@ from core.schemas.question import QuestionCreate, QuestionWithAnswersRead
 
 from services.questions import (
     create_question_svc,
+    delete_question_svc,
     get_question_with_answers_svc,
     get_questions_svc,
 )
@@ -39,3 +40,11 @@ async def create_question(
     question_in: QuestionCreate,
 ) -> Question:
     return await create_question_svc(session, question_in)
+
+
+@router.delete("/{id}", response_model=QuestionRead)
+async def delete_question(
+    id: int,
+    session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
+) -> Question:
+    return await delete_question_svc(session, id)

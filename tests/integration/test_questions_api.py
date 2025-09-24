@@ -324,3 +324,45 @@ class TestQuestionsAPI:
         assert deleted_db_answer is None
         assert len(new_db_questions) + 1 == len(old_db_questions)
         assert len(new_db_answers) + 1 == len(old_db_answers)
+
+    async def test_delete_question_with_answers_by_id_404(
+        self,
+        db_session: AsyncSession,
+        base_url: str,
+        questions_prefix: str,
+    ):
+        async with AsyncClient(
+            transport=ASGITransport(app=app),
+            base_url=base_url,
+        ) as ac:
+            # Сохранение количества вопросов и ответов до удаления
+            old_db_questions: list[Question] = await self._take_questions_snaphost(
+                db_session=db_session
+            )
+            old_db_answers: list[Answer] = await self._take_answers_snaphost(
+                db_session=db_session
+            )
+
+            response: Response = await ac.delete(questions_prefix + "0")
+
+        response_data: dict = response.json()
+
+        # Получение новых списков вопросов и ответов
+        new_db_questions: list[Question] = await self._take_questions_snaphost(
+            db_session=db_session
+        )
+        new_db_answers: list[Answer] = await self._take_answers_snaphost(
+            db_session=db_session
+        )
+
+        # Получение несуществующего вопроса
+        db_question: Question | None = await self._get_question_selectinload(
+            db_session=db_session,
+            question_id=0,
+        )
+
+        assert response.status_code == 404
+        assert db_question is None
+        assert response_data["message"] == "Сущность не найдена"
+        assert len(new_db_questions) == len(old_db_questions)
+        assert len(new_db_answers) == len(old_db_answers)

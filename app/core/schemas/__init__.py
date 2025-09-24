@@ -1,3 +1,5 @@
+"""Пакет, содержащий pydantic-схемы."""
+
 from app.core.schemas.question import (
     QuestionRead,
     QuestionCreate,

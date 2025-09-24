@@ -1,3 +1,5 @@
+"""Модуль, описывающий эндпоинты, связанные с сущностью Question."""
+
 from typing import Annotated
 
 from fastapi import APIRouter, Depends
@@ -33,7 +35,7 @@ async def get_question_with_answers(
 ) -> Question:
     return await get_question_with_answers_svc(
         session=session,
-        id=id,
+        question_id=id,
     )
 
 
@@ -55,5 +57,5 @@ async def delete_question(
 ) -> Question:
     return await delete_question_svc(
         session=session,
-        id=id,
+        question_id=id,
     )

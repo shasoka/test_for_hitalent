@@ -1,3 +1,5 @@
+"""Модуль, описывающий сущности базы данных."""
+
 import uuid
 
 from sqlalchemy import ForeignKey
@@ -9,6 +11,8 @@ from app.core.models.mixins import CreatedAtMixin, IntIdPkMixin, TextMixin
 
 
 class Question(IntIdPkMixin, TextMixin, CreatedAtMixin, Base):
+    """Модель, описывающая сущность вопроса."""
+
     answers: Mapped[list["Answer"]] = relationship(
         "Answer",
         back_populates="question",
@@ -17,6 +21,8 @@ class Question(IntIdPkMixin, TextMixin, CreatedAtMixin, Base):
 
 
 class Answer(IntIdPkMixin, TextMixin, CreatedAtMixin, Base):
+    """Модель, описывающая сущность ответа."""
+
     user_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True))
 
     question_id: Mapped[int] = mapped_column(

@@ -1,3 +1,5 @@
+"""Пакет, содержащий API-роутеры."""
+
 from fastapi import APIRouter
 
 from app.core.config import settings
@@ -16,5 +18,6 @@ router.include_router(
 
 router.include_router(
     answers_router,
+    # Опущен префикс из-за POST /questions/{id}/answers/
     tags=settings.api.answers.tags,
 )

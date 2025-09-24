@@ -1,3 +1,5 @@
+"""Модуль, содержащий класс, реализующий подключение к базе данных."""
+
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
@@ -10,6 +12,8 @@ from app.core.config import settings
 
 
 class DatabaseSetup:
+    """Класс, реализующий подключение к базе данных."""
+
     def __init__(
         self,
         url: str,
@@ -18,6 +22,19 @@ class DatabaseSetup:
         max_overflow: int = 10,  # Количество переполнения подключений
         pool_size: int = 5,  # Количество одновременных подключений
     ) -> None:
+        """
+        Метод инициализации класса.
+
+        :param url: адрес подключения к БД;
+        :param echo: флаг определяющий, будет ли выводиться информация о
+               запросах;
+        :param echo_pool: флаг определяющий, будет ли выводиться информация о
+               подключениях;
+        :param max_overflow: количество подключений, которое может быть
+               создано, если основной пул подключений исчерпан;
+        :param pool_size: количество одновременных подключений.
+        """
+
         self.engine: AsyncEngine = create_async_engine(
             url=url,
             echo=echo,
@@ -34,9 +51,13 @@ class DatabaseSetup:
         )
 
     async def dispose(self) -> None:
+        """Метод закрытия подключений к БД."""
+
         await self.engine.dispose()
 
     async def session_getter(self) -> AsyncGenerator[AsyncSession, None]:
+        """Генератор сессий."""
+
         async with self.session_factory() as session:
             yield session
 

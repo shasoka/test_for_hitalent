@@ -1,3 +1,5 @@
+"""Модуль, содержащий функцию, создающую объект класса FastAPI."""
+
 from contextlib import asynccontextmanager
 from typing import Any, AsyncGenerator
 
@@ -13,6 +15,8 @@ from app.core.models import db_helper
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI) -> AsyncGenerator[Any, Any]:
+    """Функция жизненного цикла FastAPI-приложения."""
+
     # На __aenter__ пустой yield
     yield
     # На __aexit__ dispose
@@ -20,6 +24,8 @@ async def lifespan(_app: FastAPI) -> AsyncGenerator[Any, Any]:
 
 
 def build_app() -> FastAPI:
+    """Функция-билдер, возвращающая объект класса FastAPI."""
+
     app = FastAPI(
         default_response_class=ORJSONResponse,
         lifespan=lifespan,

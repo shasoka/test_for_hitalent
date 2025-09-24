@@ -1,3 +1,5 @@
+"""Модуль, содержащий функцию, регистрирующую пользовательские middleware."""
+
 import time
 import uuid
 from typing import Awaitable, Callable
@@ -17,6 +19,14 @@ def register_middlewares(app: FastAPI) -> None:
         request: Request,
         call_next: Callable[[Request], Awaitable[Response]],
     ) -> Response:
+        """
+        Middleware, добавляющий заголовок X-Process-Time.
+
+        :param request: запрос, проходящий через middleware;
+        :param call_next: call-next функция;
+        :return: модифицированный ответ сервера на запрос.
+        """
+
         start_time: float = time.perf_counter()
         response: Response = await call_next(request)
         proc_time: float = time.perf_counter() - start_time
@@ -29,6 +39,14 @@ def register_middlewares(app: FastAPI) -> None:
         request: Request,
         call_next: Callable[[Request], Awaitable[Response]],
     ) -> Response:
+        """
+        Middleware, ответственный за логирование входящих запросов.
+
+        :param request: запрос, проходящий через middleware;
+        :param call_next: call-next функция;
+        :return: исходный ответ сервера на запрос.
+        """
+
         # Генерация uuid для различения запросов
         chain_uuid: uuid.UUID = uuid.uuid4()
 

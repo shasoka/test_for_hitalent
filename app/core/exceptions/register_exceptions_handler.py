@@ -1,3 +1,5 @@
+"""Модуль, содержащий функцию, регистрирующую обработчики исключений."""
+
 from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import ORJSONResponse
@@ -6,6 +8,11 @@ from app.core.exceptions import NoEntityFoundException
 
 
 def register_exceptions_handlers(app: FastAPI) -> None:
+    """
+    Функция, регистрирующая обработчики исключений.
+
+    :param app: объект класса FastAPI.
+    """
 
     # noinspection PyUnusedLocal
     @app.exception_handler(NoEntityFoundException)
@@ -13,6 +20,14 @@ def register_exceptions_handlers(app: FastAPI) -> None:
         request: Request,
         exc: NoEntityFoundException,
     ) -> ORJSONResponse:
+        """
+        Обработчик исключения NoEntityFoundException.
+
+        :param request: запрос, вызвавший исключение;
+        :param exc: вызванное исключение;
+        :return: JSON-ответ с сообщением об ошибке.
+        """
+
         return ORJSONResponse(
             status_code=status.HTTP_404_NOT_FOUND,
             content={
@@ -27,6 +42,14 @@ def register_exceptions_handlers(app: FastAPI) -> None:
         request: Request,
         exc: RequestValidationError,
     ) -> ORJSONResponse:
+        """
+        Обработчик исключения RequestValidationError.
+
+        :param request: запрос, вызвавший исключение;
+        :param exc: вызванное исключение;
+        :return: JSON-ответ с сообщением об ошибке.
+        """
+
         return ORJSONResponse(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             content={

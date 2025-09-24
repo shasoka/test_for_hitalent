@@ -1,3 +1,5 @@
+"""Модуль, описывающий эндпоинты, связанные с сущностью Answer."""
+
 from typing import Annotated
 
 from fastapi import APIRouter, Depends

@@ -1,3 +1,5 @@
+"""Модуль, содержащий базовый класс для ORM-моделей."""
+
 from sqlalchemy import MetaData
 from sqlalchemy.orm import DeclarativeBase, declared_attr
 
@@ -5,6 +7,13 @@ from app.core.config import settings
 
 
 def _camel_case_to_snake_case(input_str: str) -> str:
+    """
+    Функция, конвертирующая строку из camelCase в snake_case.
+
+    :param input_str: входная строка в camelCase;
+    :return: строка в snake_case.
+    """
+
     chars = []
     for idx, char in enumerate(input_str):
         if idx and char.isupper():

@@ -1,8 +1,8 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core.models import Question
-from core.schemas import QuestionCreate
-from crud.questions import (
+from app.core.models import Question
+from app.core.schemas import QuestionCreate
+from app.crud.questions import (
     create_question_in_db,
     delete_question_in_db,
     get_question_with_answers_from_db,

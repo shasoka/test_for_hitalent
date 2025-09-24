@@ -3,8 +3,8 @@ from typing import Annotated
 
 from pydantic import BaseModel, PlainValidator
 
-from core.schemas.mixins import CreatedAtMixin, IntIdPkMixin, TextMixin
-from core.schemas.validators import check_if_value_is_correct_uuid
+from app.core.schemas.mixins import CreatedAtMixin, IntIdPkMixin, TextMixin
+from app.core.schemas.validators import check_if_value_is_correct_uuid
 
 
 class AnswerBase(TextMixin, BaseModel):

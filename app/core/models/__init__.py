@@ -1,6 +1,6 @@
-from .base import Base
-from .db_setup import db_helper
-from .entities import Question, Answer
+from app.core.models.base import Base
+from app.core.models.db_setup import db_helper
+from app.core.models.entities import Question, Answer
 
 __all__ = (
     "Base",

@@ -4,11 +4,11 @@ from typing import Any, AsyncGenerator
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse, RedirectResponse
 
-from core.config import settings
-from api import router as api_router
-from core.exceptions import register_exceptions_handlers
-from core.middlewares import register_middlewares
-from core.models import db_helper
+from app.core.config import settings
+from app.api import router as api_router
+from app.core.exceptions import register_exceptions_handlers
+from app.core.middlewares import register_middlewares
+from app.core.models import db_helper
 
 
 @asynccontextmanager

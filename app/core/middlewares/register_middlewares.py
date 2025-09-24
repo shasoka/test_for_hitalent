@@ -7,7 +7,7 @@ from starlette.responses import StreamingResponse
 
 import orjson
 
-from setup_logger import logger
+from app.core.middlewares.setup_logger import logger
 
 
 def register_middlewares(app: FastAPI) -> None:

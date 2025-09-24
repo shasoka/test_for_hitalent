@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
-from .answer import AnswerRead
-from .mixins import CreatedAtMixin, IntIdPkMixin, TextMixin
+from app.core.schemas.answer import AnswerRead
+from app.core.schemas.mixins import CreatedAtMixin, IntIdPkMixin, TextMixin
 
 
 class QuestionBase(TextMixin, BaseModel):

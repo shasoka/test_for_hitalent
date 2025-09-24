@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import ORJSONResponse
 
-from core.exceptions import NoEntityFoundException
+from app.core.exceptions import NoEntityFoundException
 
 
 def register_exceptions_handlers(app: FastAPI) -> None:

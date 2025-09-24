@@ -1,8 +1,8 @@
 from fastapi import APIRouter
 
-from core.config import settings
-from .questions import router as questions_router
-from .answers import router as answers_router
+from app.core.config import settings
+from app.api.questions import router as questions_router
+from app.api.answers import router as answers_router
 
 __all__ = ("router",)
 

@@ -1,7 +1,7 @@
 from sqlalchemy import MetaData
 from sqlalchemy.orm import DeclarativeBase, declared_attr
 
-from core.config import settings
+from app.core.config import settings
 
 
 def _camel_case_to_snake_case(input_str: str) -> str:

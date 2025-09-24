@@ -3,10 +3,10 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core.config import settings
-from core.models import Answer, db_helper
-from core.schemas import AnswerCreate, AnswerRead
-from services.answers import (
+from app.core.config import settings
+from app.core.models import Answer, db_helper
+from app.core.schemas import AnswerCreate, AnswerRead
+from app.services.answers import (
     create_answer_svc,
     delete_answer_svc,
     get_answer_by_id_svc,

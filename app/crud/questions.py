@@ -4,10 +4,9 @@ from sqlalchemy import Result as QueryResult, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from core.exceptions import NoEntityFoundException
-from core.models import Question
-
-from core.schemas import QuestionCreate
+from app.core.exceptions import NoEntityFoundException
+from app.core.models import Question
+from app.core.schemas import QuestionCreate
 
 __all__ = (
     "create_question_in_db",

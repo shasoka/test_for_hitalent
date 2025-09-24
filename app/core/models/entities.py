@@ -4,8 +4,8 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from core.models.base import Base
-from core.models.mixins import CreatedAtMixin, IntIdPkMixin, TextMixin
+from app.core.models.base import Base
+from app.core.models.mixins import CreatedAtMixin, IntIdPkMixin, TextMixin
 
 
 class Question(IntIdPkMixin, TextMixin, CreatedAtMixin, Base):

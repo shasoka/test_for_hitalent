@@ -1,10 +1,13 @@
+import uuid
+
 import pytest
 from httpx import ASGITransport, AsyncClient, Response
 from sqlalchemy import Result as QueryResult, select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
 from app.main import app
-from app.core.models import Question
+from app.core.models import Answer, Question
 
 
 @pytest.mark.asyncio
@@ -130,4 +133,56 @@ class TestQuestionsAPI:
             base_url=base_url,
             questions_prefix=questions_prefix,
             invalid_text="",
+        )
+
+    async def test_get_question_with_answers_by_id_200(
+        self,
+        db_session: AsyncSession,
+        base_url: str,
+        questions_prefix: str,
+    ):
+        async with AsyncClient(
+            transport=ASGITransport(app=app),
+            base_url=base_url,
+        ) as ac:
+            # Добавление вопроса и ответа в БД
+            question: Question = Question(text="Question to get")
+            db_session.add(question)
+            await db_session.commit()
+            await db_session.refresh(question)
+
+            user_id: uuid.UUID = uuid.uuid4()
+            answer: Answer = Answer(
+                user_id=user_id,
+                text="Answer to get",
+                question_id=question.id,
+            )
+            db_session.add(answer)
+
+            await db_session.commit()
+            await db_session.refresh(question)
+
+            # Выполнение запроса
+            response: Response = await ac.get(questions_prefix + f"{question.id}")
+
+        # Проверка
+        response_data: dict = response.json()
+        query_result: QueryResult = await db_session.execute(
+            select(Question).options(selectinload(Question.answers))
+        )
+        db_question: Question | None = query_result.scalar_one_or_none()
+
+        assert response.status_code == 200
+        assert db_question is not None
+        assert db_question.text == response_data["text"] == "Question to get"
+        assert len(db_question.answers) == len(response_data["answers"]) == 1
+        assert (
+            db_question.answers[0].text
+            == response_data["answers"][0]["text"]
+            == "Answer to get"
+        )
+        assert (
+            str(db_question.answers[0].user_id)
+            == response_data["answers"][0]["user_id"]
+            == str(user_id)
         )

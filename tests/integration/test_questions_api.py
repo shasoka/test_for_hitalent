@@ -10,6 +10,55 @@ from app.core.models import Question
 @pytest.mark.asyncio
 class TestQuestionsAPI:
 
+    @staticmethod
+    async def _post_question(
+        db_session: AsyncSession,
+        base_url: str,
+        questions_prefix: str,
+        text: str,
+    ) -> tuple[list[Question], list[Question], dict, int]:
+        # Сохранение количества вопросов до добавления нового
+        old_query_result: QueryResult = await db_session.execute(select(Question))
+        old_db_questions: list[Question] = list(old_query_result.scalars().all())
+
+        async with AsyncClient(
+            transport=ASGITransport(app=app),
+            base_url=base_url,
+        ) as ac:
+            # Выполнение запроса
+            request_body: dict = {"text": text}
+            response: Response = await ac.post(
+                questions_prefix,
+                json=request_body,
+            )
+
+        response_data: dict = response.json()
+        new_query_result: QueryResult = await db_session.execute(select(Question))
+        new_db_questions: list[Question] = list(new_query_result.scalars().all())
+
+        return old_db_questions, new_db_questions, response_data, response.status_code
+
+    async def _test_invalid_question_creation(
+        self,
+        db_session: AsyncSession,
+        base_url: str,
+        questions_prefix: str,
+        invalid_text: str,
+        expected_error_message: str = "Недопустимая сущность",
+    ) -> None:
+        old_db_questions, new_db_questions, response_data, status_code = (
+            await self._post_question(
+                db_session=db_session,
+                base_url=base_url,
+                questions_prefix=questions_prefix,
+                text=invalid_text,
+            )
+        )
+
+        assert status_code == 422
+        assert response_data["message"] == expected_error_message
+        assert len(old_db_questions) == len(new_db_questions)
+
     async def test_get_all_questions_without_answers_200(
         self,
         db_session: AsyncSession,
@@ -44,25 +93,41 @@ class TestQuestionsAPI:
         base_url: str,
         questions_prefix: str,
     ) -> None:
-        # Сохранение количества вопросов до добавления нового
-        old_query_result: QueryResult = await db_session.execute(select(Question))
-        old_db_questions: list[Question] = list(old_query_result.scalars().all())
-
-        async with AsyncClient(
-            transport=ASGITransport(app=app),
-            base_url=base_url,
-        ) as ac:
-            # Выполнение запроса
-            request_body: dict = {"text": "Question to create"}
-            response: Response = await ac.post(
-                questions_prefix,
-                json=request_body,
+        old_db_questions, new_db_questions, response_data, status_code = (
+            await self._post_question(
+                db_session=db_session,
+                base_url=base_url,
+                questions_prefix=questions_prefix,
+                text="Question to create",
             )
+        )
 
-        response_data: dict = response.json()
-        new_query_result: QueryResult = await db_session.execute(select(Question))
-        new_db_questions: list[Question] = list(new_query_result.scalars().all())
-
-        assert response.status_code == 200
+        assert status_code == 200
         assert response_data["text"] == new_db_questions[0].text == "Question to create"
         assert len(old_db_questions) + 1 == len(new_db_questions)
+
+    async def test_create_question_422_text_field_is_empty(
+        self,
+        db_session: AsyncSession,
+        base_url: str,
+        questions_prefix: str,
+    ):
+        await self._test_invalid_question_creation(
+            db_session=db_session,
+            base_url=base_url,
+            questions_prefix=questions_prefix,
+            invalid_text="",
+        )
+
+    async def test_create_question_422_text_field_consist_of_spaces(
+        self,
+        db_session: AsyncSession,
+        base_url: str,
+        questions_prefix: str,
+    ):
+        await self._test_invalid_question_creation(
+            db_session=db_session,
+            base_url=base_url,
+            questions_prefix=questions_prefix,
+            invalid_text="",
+        )

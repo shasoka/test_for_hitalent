@@ -168,7 +168,9 @@ class TestQuestionsAPI:
         # Проверка
         response_data: dict = response.json()
         query_result: QueryResult = await db_session.execute(
-            select(Question).options(selectinload(Question.answers))
+            select(Question)
+            .where(Question.id == question.id)
+            .options(selectinload(Question.answers))
         )
         db_question: Question | None = query_result.scalar_one_or_none()
 
@@ -186,3 +188,29 @@ class TestQuestionsAPI:
             == response_data["answers"][0]["user_id"]
             == str(user_id)
         )
+
+    async def test_get_question_with_answers_by_id_404(
+        self,
+        db_session: AsyncSession,
+        base_url: str,
+        questions_prefix: str,
+    ):
+        async with AsyncClient(
+            transport=ASGITransport(app=app),
+            base_url=base_url,
+        ) as ac:
+            # Выполнение запроса
+            response: Response = await ac.get(questions_prefix + "0")
+
+        # Проверка
+        response_data: dict = response.json()
+        query_result: QueryResult = await db_session.execute(
+            select(Question)
+            .where(Question.id == 0)
+            .options(selectinload(Question.answers))
+        )
+        db_question: Question | None = query_result.scalar_one_or_none()
+
+        assert response.status_code == 404
+        assert db_question is None
+        assert response_data["message"] == "Сущность не найдена"

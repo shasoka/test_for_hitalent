@@ -13,8 +13,13 @@ logging.getLogger("httpcore").setLevel(logging.WARNING)
 
 
 @pytest.fixture
-def base_url():
-    return "http://test/api"
+def base_url() -> str:
+    return "http://test/api/"
+
+
+@pytest.fixture
+def questions_prefix() -> str:
+    return "questions/"
 
 
 @pytest_asyncio.fixture(autouse=True)

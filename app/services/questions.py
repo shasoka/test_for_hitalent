@@ -18,25 +18,34 @@ __all__ = (
 
 
 async def get_questions_svc(session: AsyncSession) -> list[Question]:
-    return await get_questions_from_db(session)
+    return await get_questions_from_db(session=session)
 
 
 async def get_question_with_answers_svc(
     id: int,
     session: AsyncSession,
 ) -> Question:
-    return await get_question_with_answers_from_db(id, session)
+    return await get_question_with_answers_from_db(
+        session=session,
+        question_id=id,
+    )
 
 
 async def create_question_svc(
     session: AsyncSession,
     question_in: QuestionCreate,
 ) -> Question:
-    return await create_question_in_db(session, question_in)
+    return await create_question_in_db(
+        session=session,
+        question_in=question_in,
+    )
 
 
 async def delete_question_svc(
     session: AsyncSession,
     id: int,
 ) -> Question:
-    return await delete_question_in_db(session, id)
+    return await delete_question_in_db(
+        session=session,
+        question_id=id,
+    )

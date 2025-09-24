@@ -23,7 +23,7 @@ router = APIRouter()
 async def get_questions(
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
 ) -> list[Question]:
-    return await get_questions_svc(session)
+    return await get_questions_svc(session=session)
 
 
 @router.get("/{id}", response_model=QuestionWithAnswersRead)
@@ -31,7 +31,10 @@ async def get_question_with_answers(
     id: int,
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
 ) -> Question:
-    return await get_question_with_answers_svc(id, session)
+    return await get_question_with_answers_svc(
+        session=session,
+        id=id,
+    )
 
 
 @router.post("/", response_model=QuestionRead)
@@ -39,7 +42,10 @@ async def create_question(
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
     question_in: QuestionCreate,
 ) -> Question:
-    return await create_question_svc(session, question_in)
+    return await create_question_svc(
+        session=session,
+        question_in=question_in,
+    )
 
 
 @router.delete("/{id}", response_model=QuestionRead)
@@ -47,4 +53,7 @@ async def delete_question(
     id: int,
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
 ) -> Question:
-    return await delete_question_svc(session, id)
+    return await delete_question_svc(
+        session=session,
+        id=id,
+    )

@@ -27,7 +27,11 @@ async def create_answer(
     answer_in: AnswerCreate,
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
 ) -> Answer:
-    return await create_answer_svc(session, id, answer_in)
+    return await create_answer_svc(
+        session=session,
+        question_id=id,
+        answer_in=answer_in,
+    )
 
 
 @router.get(settings.api.answers.prefix + "/{id}", response_model=AnswerRead)
@@ -35,7 +39,10 @@ async def get_answer_by_id(
     id: int,
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
 ) -> Answer:
-    return await get_answer_by_id_svc(id, session)
+    return await get_answer_by_id_svc(
+        session=session,
+        answer_id=id,
+    )
 
 
 @router.delete(
@@ -46,4 +53,7 @@ async def delete_answer(
     id: int,
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
 ) -> Answer:
-    return await delete_answer_svc(id, session)
+    return await delete_answer_svc(
+        session=session,
+        answer_id=id,
+    )

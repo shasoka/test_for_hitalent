@@ -24,13 +24,16 @@ async def get_answer_by_id_or_404(
 
 async def create_answer_in_db(
     session: AsyncSession,
-    answer_id: int,
+    question_id: int,
     answer_in: AnswerCreate,
 ) -> Answer:
-    await get_question_by_id_or_404(session, answer_id)
+    await get_question_by_id_or_404(
+        session=session,
+        question_id=question_id,
+    )
 
     answer = Answer(**answer_in.dict())
-    answer.question_id = answer_id
+    answer.question_id = question_id
     session.add(answer)
     await session.commit()
     return answer
@@ -41,8 +44,8 @@ async def delete_answer_in_db(
     answer_id: int,
 ) -> Answer:
     answer_to_delete: Answer = await get_answer_by_id_or_404(
-        session,
-        answer_id,
+        session=session,
+        answer_id=answer_id,
     )
 
     await session.delete(answer_to_delete)

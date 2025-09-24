@@ -66,8 +66,8 @@ async def delete_question_in_db(
     question_id: int,
 ) -> Question:
     question_to_delete: Question = await get_question_by_id_or_404(
-        session,
-        question_id,
+        session=session,
+        question_id=question_id,
     )
 
     await session.delete(question_to_delete)

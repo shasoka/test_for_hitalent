@@ -6,7 +6,7 @@ services:
         INSTALL_DEV: "true"
     container_name: test_api_service
     command: >
-      sh -c "pytest -v --maxfail=1 --disable-warnings -q"
+      sh -c "pytest"
     environment:
       APP_CONFIG__DB__URL: "postgresql+asyncpg://test_user:test_pass@test-db:5432/test_db"
     depends_on:

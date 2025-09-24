@@ -78,10 +78,7 @@ class Settings(BaseSettings):
     run: RunConfig = RunConfig()
     app: AppObjectConfig = AppObjectConfig()
     api: ApiBaseConfig = ApiBaseConfig()
-    # Значение по умолчанию (необходимо для работы тестового клиента)
-    db: Database = Database(
-        url=PostgresDsn("postgresql+asyncpg://user:password@host:5432/db"),
-    )
+    db: Database
 
 
 # noinspection PyArgumentList
